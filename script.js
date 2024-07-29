@@ -34,6 +34,9 @@ function setupMap(center) {
 
     // Create category buttons
     createCategoryButtons();
+
+    // Create recenter button
+    createRecenterButton();
 }
 
 // Function to generate random points around a center location
@@ -161,4 +164,37 @@ function createIconElement(iconClass, color) {
 
     iconContainer.appendChild(icon);
     return iconContainer;
+}
+
+// Function to create recenter button
+function createRecenterButton() {
+    const recenterButton = document.createElement("button");
+    recenterButton.className = "recenter-button";
+    recenterButton.innerHTML = `<i class="fas fa-location-arrow"></i>`;
+    recenterButton.style.position = "absolute";
+    recenterButton.style.bottom = "10px";
+    recenterButton.style.right = "10px";
+    recenterButton.style.backgroundColor = "#fff";
+    recenterButton.style.border = "2px solid #ccc";
+    recenterButton.style.borderRadius = "20px";
+    recenterButton.style.padding = "10px";
+    recenterButton.style.cursor = "pointer";
+    recenterButton.style.fontSize = "14px";
+    recenterButton.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+    recenterButton.addEventListener("mouseover", () => {
+        recenterButton.style.backgroundColor = lightenDarkenColor("#ccc", 40);
+    });
+    recenterButton.addEventListener("mouseout", () => {
+        recenterButton.style.backgroundColor = "#fff";
+    });
+    recenterButton.addEventListener("click", () => {
+        navigator.geolocation.getCurrentPosition(position => {
+            map.flyTo({
+                center: [position.coords.longitude, position.coords.latitude],
+                essential: true // this animation is considered essential with respect to prefers-reduced-motion
+            });
+        });
+    });
+
+    document.body.appendChild(recenterButton);
 }
