@@ -33,7 +33,7 @@ function setupMap(center) {
     map.addControl(directions, "top-left");
 
     // Create category buttons
-    createCategoryButtons(center);
+    createCategoryButtons();
 }
 
 // Function to generate random points around a center location
@@ -59,7 +59,7 @@ function generateRandomPoints(center, numPoints) {
 }
 
 // Function to create category buttons with icons
-function createCategoryButtons(center) {
+function createCategoryButtons() {
     const categories = [
         { name: "Restaurants", icon: "fas fa-utensils", color: "#FF6347" },
         { name: "Bathrooms", icon: "fas fa-restroom", color: "#1E90FF" },
@@ -98,6 +98,7 @@ function createCategoryButtons(center) {
         });
         button.addEventListener("click", () => {
             clearMarkers();
+            const center = map.getCenter().toArray(); // Get the current center of the map
             const points = generateRandomPoints(center, 20);
             points.forEach(point => {
                 const marker = new mapboxgl.Marker({
