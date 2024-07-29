@@ -83,27 +83,29 @@ function createCategoryButtons(center) {
         const button = document.createElement("button");
         button.className = "category-button";
         button.innerHTML = `<i class="${category.icon}"></i> ${category.name}`;
-        button.style.backgroundColor = category.color;
-        button.style.border = "1px solid #ccc";
+        button.style.backgroundColor = "#fff";
+        button.style.border = `2px solid ${category.color}`;
         button.style.borderRadius = "20px";
         button.style.padding = "10px 20px";
         button.style.cursor = "pointer";
         button.style.fontSize = "14px";
         button.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
         button.addEventListener("mouseover", () => {
-            button.style.backgroundColor = lightenDarkenColor(category.color, 20);
+            button.style.backgroundColor = lightenDarkenColor(category.color, 40);
         });
         button.addEventListener("mouseout", () => {
-            button.style.backgroundColor = category.color;
+            button.style.backgroundColor = "#fff";
         });
         button.addEventListener("click", () => {
             clearMarkers();
             const points = generateRandomPoints(center, 20);
             points.forEach(point => {
-                const marker = new mapboxgl.Marker({ color: category.color })
-                    .setLngLat([point.lng, point.lat])
-                    .setPopup(new mapboxgl.Popup().setText(point.name))
-                    .addTo(map);
+                const marker = new mapboxgl.Marker({
+                    element: createIconElement(category.icon, category.color)
+                })
+                .setLngLat([point.lng, point.lat])
+                .setPopup(new mapboxgl.Popup().setText(point.name))
+                .addTo(map);
                 markers.push(marker);
             });
         });
@@ -137,4 +139,25 @@ function lightenDarkenColor(col, amt) {
     if (b > 255) b = 255;
     else if (b < 0) b = 0;
     return (usePound ? "#" : "") + (r.toString(16).padStart(2, "0")) + (g.toString(16).padStart(2, "0")) + (b.toString(16).padStart(2, "0"));
+}
+
+// Function to create a custom icon element for markers
+function createIconElement(iconClass, color) {
+    const iconContainer = document.createElement("div");
+    iconContainer.style.backgroundColor = "#f9f9f9"; // off-white background
+    iconContainer.style.border = `2px solid ${color}`;
+    iconContainer.style.borderRadius = "50%";
+    iconContainer.style.width = "30px";
+    iconContainer.style.height = "30px";
+    iconContainer.style.display = "flex";
+    iconContainer.style.alignItems = "center";
+    iconContainer.style.justifyContent = "center";
+
+    const icon = document.createElement("i");
+    icon.className = iconClass;
+    icon.style.color = "black"; // default icon color
+    icon.style.fontSize = "16px"; // slightly smaller icon
+
+    iconContainer.appendChild(icon);
+    return iconContainer;
 }
